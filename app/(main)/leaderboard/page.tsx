@@ -10,12 +10,12 @@ import { redirect } from "next/navigation";
 const LeaderboardPage = async () => {
   const userProgressData = getUserProgress();
   const userSubscriptionData = getUserSubscription();
-  const leaderboadData = getTopTenUsers();
+  const leaderboardData = getTopTenUsers();
 
   const [userProgress, userSubscription, leaderboard] = await Promise.all([
     userProgressData,
     userSubscriptionData,
-    leaderboadData,
+    leaderboardData,
   ]);
   if (!userProgress || !userProgress.activeCourse) {
     redirect("/courses");
