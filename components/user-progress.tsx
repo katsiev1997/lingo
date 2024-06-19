@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
-  activeCourse: typeof courses.$inferSelect; // TODO: replace with DB types
+  activeCourse: typeof courses.$inferSelect;
   hearts: number;
   points: number;
   hasActiveSubscription: boolean;

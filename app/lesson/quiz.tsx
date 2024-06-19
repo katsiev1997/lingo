@@ -2,7 +2,7 @@
 
 import { upsertChallengeProgress } from "@/actions/challenge_progress";
 import { reduceHearts } from "@/actions/user-progress";
-import { challengeOptions, challenges } from "@/db/schema";
+import { challengeOptions, challenges, userSubscription } from "@/db/schema";
 import { useHeartsModal } from "@/store/use-hearts-modal";
 import { usePracticeModal } from "@/store/use-practice-modal";
 import Image from "next/image";
@@ -25,7 +25,9 @@ type Props = {
     completed: boolean;
     challengeOptions: (typeof challengeOptions.$inferSelect)[];
   })[];
-  userSubscription: any; // TODO: Replace with a subscription DB type
+  userSubscription:
+    | (typeof userSubscription.$inferSelect & { isActive: boolean })
+    | null;
 };
 
 export const Quiz = ({
@@ -48,7 +50,9 @@ export const Quiz = ({
   const router = useRouter();
   const [finishAudio] = useAudio({ src: "/finish.mp3", autoPlay: true });
   const [correctAudio, _c, correctControls] = useAudio({ src: "/correct.wav" });
-  const [incorrectAudio, _i, incorrectControls] = useAudio({ src: "/incorrect.wav" });
+  const [incorrectAudio, _i, incorrectControls] = useAudio({
+    src: "/incorrect.wav",
+  });
   const [pending, startTransition] = useTransition();
   const [lessonId] = useState(initialLessonId);
   const [hearts, setHearts] = useState(initialHearts);
@@ -57,7 +61,9 @@ export const Quiz = ({
   });
   const [challenges] = useState(initialLessonChallenges);
   const [activeIndex, setActiveIndex] = useState(() => {
-    const uncompletedIndex = challenges.findIndex((challenge) => !challenge.completed);
+    const uncompletedIndex = challenges.findIndex(
+      (challenge) => !challenge.completed
+    );
     return uncompletedIndex === -1 ? 0 : uncompletedIndex;
   });
 
