@@ -1,4 +1,6 @@
 import { FeedWrapper } from "@/components/feed-wrapper";
+import { Promo } from "@/components/promo";
+import { Quests } from "@/components/quests";
 import { StickyWrapper } from "@/components/sticky-wrapper";
 import { UserProgress } from "@/components/user-progress";
 import {
@@ -8,10 +10,10 @@ import {
   getUserProgress,
   getUserSubscription,
 } from "@/db/queries";
+import { lessons, units as unitsSchema } from "@/db/schema";
 import { redirect } from "next/navigation";
 import { Header } from "./header";
 import { Unit } from "./unit";
-import { lessons, units as unitsSchema } from "@/db/schema";
 
 const LearnPage = async () => {
   const userProgressData = getUserProgress();
@@ -33,6 +35,8 @@ const LearnPage = async () => {
     redirect("/courses");
   }
 
+  const isPro = !!userSubscription?.isActive;
+
   if (!userProgress || !userProgress.activeCourse) {
     redirect("/courses");
   }
@@ -43,8 +47,10 @@ const LearnPage = async () => {
           activeCourse={userProgress.activeCourse}
           hearts={userProgress.hearts}
           points={userProgress.points}
-          hasActiveSubscription={!!userSubscription?.isActive}
+          hasActiveSubscription={isPro}
         />
+        {!isPro && <Promo />}
+        <Quests points={userProgress.points} />
       </StickyWrapper>
       <FeedWrapper>
         <Header title={userProgress.activeCourse.title} />
